@@ -1,0 +1,35 @@
+MICROSOFT COMPANY INFORMATION
+
+Company Name: Microsoft Corporation
+Founded: April 4, 1975
+Founders: Bill Gates and Paul Allen
+Headquarters: Redmond, Washington, United States
+CEO: Satya Nadella
+Ticker Symbol: MSFT (NASDAQ)
+
+Overview:
+Microsoft is an American multinational technology company known for software, cloud computing, artificial intelligence, gaming, and productivity solutions. The company developed Windows, one of the world's most widely used operating systems, and Microsoft 365 productivity applications.
+
+Major Products and Services:
+- Windows
+- Microsoft 365
+- Azure
+- Microsoft Teams
+- OneDrive
+- Outlook
+- Xbox
+- LinkedIn
+- GitHub
+- Bing
+- Surface devices
+
+Business Segments:
+1. Productivity and Business Processes
+2. Intelligent Cloud
+3. More Personal Computing
+
+Mission:
+To empower every person and every organization on the planet to achieve more.
+
+Official Website:
+https://www.microsoft.com
