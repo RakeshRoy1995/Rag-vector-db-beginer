@@ -2,6 +2,7 @@ import os
 from langchain_chroma import Chroma
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_ollama import OllamaLLM
+from langchain_google_genai import ChatGoogleGenerativeAI
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -30,9 +31,9 @@ db = Chroma(
 # 3. Local Ollama LLM
 # --------------------------------------------------
 
-llm = OllamaLLM(
-    model="llama3",
-    base_url="http://localhost:11434"
+llm = ChatGoogleGenerativeAI(
+    model="gemini-2.5-flash",
+    temperature=0
 )
 
 # --------------------------------------------------

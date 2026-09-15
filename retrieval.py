@@ -21,40 +21,19 @@ db = Chroma(
 # Search for relevant documents
 query = "What is NVIDIA?"
 
-# retriever = db.as_retriever(search_kwargs={"k": 5})
-
-# retriever = db.as_retriever(
-#     search_type="similarity_score_threshold",
-#     search_kwargs={
-#         "k": 5,
-#         "score_threshold": 0.3  # Only return chunks with cosine similarity ≥ 0.3
-#     }
-# )
-
-# relevant_docs = retriever.invoke(query)
-
 print(f"User Query: {query}")
 print("--- Context ---")
 
-results = db.similarity_search_with_score(
+relevant_docs = db.similarity_search_with_score(
     query,
     k=10
 )
 
-for i, (doc, score) in enumerate(results, 1):
+for i, (doc, score) in enumerate(relevant_docs, 1):
     print(f"\nDocument {i}")
     print(f"Distance: {score:.4f}")
     print(doc.page_content[:300])
     
-    
-# for i, doc in enumerate(relevant_docs, 1):
-    
-#     # Limit to ~100 words
-#     words = doc.page_content.split()
-#     snippet = " ".join(words[:100])  # take first 100 words
-#     print(f"Document {i}:\n{snippet}\n")
-
-
 # Synthetic Questions: 
 
 # 1. "What was NVIDIA's first graphics accelerator called?"

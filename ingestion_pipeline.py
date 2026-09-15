@@ -80,9 +80,9 @@ def main():
     chunks = split_documents(documents)
     
     # # Step 3: Create vector store
-    vectorstore = create_vector_store(chunks, persistent_directory)
+    create_vector_store(chunks, persistent_directory)
     
-    print("main fn")
+    print("main")
 
 if __name__ == "__main__":
    main()
