@@ -7,7 +7,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 def load_documents(docs_path="docs"):
     """Load all text files from the docs directory"""
     # print(f"Loading documents from {docs_path}...")
@@ -66,7 +65,6 @@ def create_vector_store(chunks,
 
     print("--- Finished creating vector store ---")
     return vectorstore
-
 
 def main():
     
