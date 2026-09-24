@@ -7,7 +7,10 @@ Pipeline per upload (runs in a background thread, ~1-3 min per PDF on CPU):
     Docling extraction -> section-aware chunks -> Chroma sync -> ready to ask
 """
 
+import base64
 import json
+import os
+import secrets
 import threading
 import traceback
 import uuid
@@ -15,8 +18,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import uvicorn
-from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
+from fastapi.responses import FileResponse, Response
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -30,8 +33,13 @@ from retrieval_pipeline_pdf import CHUNKS_JSON, PdfRetriever
 # CONFIG
 # ============================================================
 
-HOST = "127.0.0.1"
-PORT = 8000
+# Hugging Face Spaces / Docker set these; locally the defaults apply
+HOST = os.environ.get("HOST", "127.0.0.1")
+PORT = int(os.environ.get("PORT", "8000"))
+
+# If set, the browser asks for this password (any username).
+# Set it on public deployments so strangers can't spend your Gemini quota.
+APP_PASSWORD = os.environ.get("APP_PASSWORD", "")
 
 DOCS_DIR = Path(ingestion.DOCS_PATH)
 IMAGE_DIR = Path(ingestion.IMAGE_DIR)
@@ -156,6 +164,32 @@ def run_pipeline(job_id: str, pdf_path: Path):
 # ============================================================
 
 app = FastAPI(title="PDF RAG", docs_url="/api/docs", redoc_url=None)
+
+
+@app.middleware("http")
+async def password_gate(request: Request, call_next):
+    """HTTP Basic auth, only when APP_PASSWORD is set."""
+    if not APP_PASSWORD or request.url.path == "/healthz":
+        return await call_next(request)
+
+    header = request.headers.get("authorization", "")
+    if header.startswith("Basic "):
+        try:
+            _, _, password = base64.b64decode(header[6:]).decode("utf-8").partition(":")
+            if secrets.compare_digest(password, APP_PASSWORD):
+                return await call_next(request)
+        except Exception:
+            pass
+
+    return Response(
+        "Password required", status_code=401,
+        headers={"WWW-Authenticate": 'Basic realm="PDF RAG"'},
+    )
+
+
+@app.get("/healthz")
+def healthz():
+    return {"ok": True}
 
 
 class AskRequest(BaseModel):
